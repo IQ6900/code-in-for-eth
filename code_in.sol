@@ -1,4 +1,6 @@
-//SPDX-License-Identifier:Apache License 2.0 
+//SPDX-License-Identifier: Apache License 2.0 
+// Solidity로 변경한 예시 (이더리움 스마트 계약)
+
 
 pragma solidity ^0.8.0;
 
@@ -11,27 +13,30 @@ contract CodeIn {
         uint8 method,
         uint8 decodeBreak
     );
+
+         // data update
+    event DBCodeSent(
+        address indexed user,
+        string handle,
+        string tailTx,
+        string typeField,
+        string offset
+    );
+      
     // data update
-    struct DBStruct {
-        uint8 bump;
-        string handle;
-        string dataTailTx;
+    struct UserDataList {
         string nowDbTx;
         string beforeDbTx;
-        string typeField;
-        string offset;
     }
-    mapping(address => DBStruct) public dbStructs;
+
+
+    mapping(address => UserDataList) public userDataLists;
 
     // user_initialize 
     function userInitialize(address user) public {
-        DBStruct storage dbStruct = dbStructs[user];
-        dbStruct.handle = "";
-        dbStruct.dataTailTx = "";
-        dbStruct.nowDbTx = "Genesis";
-        dbStruct.beforeDbTx = "null";
-        dbStruct.typeField = "";
-        dbStruct.offset = "";
+        UserDataList storage userDataList = userDataLists[user];
+        userDataList.nowDbTx = "Genesis";
+        userDataList.beforeDbTx = "null";
     }
 
     // send_code function uses log 
@@ -46,25 +51,23 @@ contract CodeIn {
     }
 
     // db_code_in function uses state update 
-    function dbCodeIn(
+    function sendDbCode(
         address user,
         string memory handle,
-        string memory dataTailTx,
+        string memory tailTx,
         string memory typeField,
         string memory offset
     ) public {
-        DBStruct storage dbStruct = dbStructs[user];
-        dbStruct.handle = handle;
-        dbStruct.dataTailTx = dataTailTx;
-        dbStruct.typeField = typeField;
-        dbStruct.offset = offset;
+        emit DBCodeSent(user, handle, tailTx, typeField, offset);
+    
     }
-    function dbConnect(
+
+    function userDataConnect(
         address user,
         string memory newDbTx
     ) public {
-        DBStruct storage dbStruct = dbStructs[user];
-        dbStruct.beforeDbTx = dbStruct.nowDbTx;        
-        dbStruct.nowDbTx = newDbTx;
+        UserDataList storage userDataList = userDataLists[user];
+        userDataList.beforeDbTx = userDataList.nowDbTx; 
+        userDataList.nowDbTx = newDbTx;
     }
 }
