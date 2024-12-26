@@ -11,7 +11,7 @@ contract CodeIn {
         uint8 decodeBreak
     );
 
-         // data update
+    // data update
     event DBCodeSent(
         address indexed user,
         string handle,
@@ -26,7 +26,6 @@ contract CodeIn {
         string beforeDbTx;
     }
 
-
     mapping(address => UserDataList) public userDataLists;
 
     // user_initialize 
@@ -35,8 +34,7 @@ contract CodeIn {
         userDataList.nowDbTx = "Genesis";
         userDataList.beforeDbTx = "null";
     }
-
-    // send_code function uses log 
+    // sendCode function uses log 
     function sendCode(
         address user,
         string memory code,
@@ -47,7 +45,7 @@ contract CodeIn {
         emit CodeSent(user, code, beforeTx, method, decodeBreak);
     }
 
-    // db_code_in function uses state update 
+    // sendDbCode function uses log 
     function sendDbCode(
         address user,
         string memory handle,
@@ -58,7 +56,7 @@ contract CodeIn {
         emit DBCodeSent(user, handle, tailTx, typeField, offset);
     
     }
-
+     // userDataConnect function uses state update 
     function userDataConnect(
         address user,
         string memory newDbTx
