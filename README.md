@@ -22,7 +22,7 @@
 ### Ethereum Implementation
 
 - **Storage Method**: Uses a combination of logs for cost-effective data storage and state updates for maintaining structured data. (Ethereum's event log is fully onchain)
-- **Data Retrieval**: Logs provide transaction details, while state holds the current data status.
+- **Data Retrieval**:  Fast due to the use of **Mapping**.
 - **Gas Costs**: Optimized strategy to minimize state changes and leverage logs for reducing costs.
 
 ## Key Functionalities
