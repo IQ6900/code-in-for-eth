@@ -1,7 +1,4 @@
 //SPDX-License-Identifier: Apache License 2.0 
-// Solidity로 변경한 예시 (이더리움 스마트 계약)
-
-
 pragma solidity ^0.8.0;
 
 contract CodeIn {
