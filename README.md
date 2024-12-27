@@ -30,7 +30,7 @@
 - **Event Logging (`sendCode` and `sendDbCode`)**: Emits data to Ethereum logs for cost-effective storage and transaction traceability.
 - **State Updates (`userDataConnect`)**: Updates user-specific data structures to reflect the current transaction link.
 - **User Initialization (`userInitialize`)**: Sets up a user's state structure with initial values for tracking.
-- **Transaction Linking**: Uses `nowDbTx` and `beforeDbTx` to create a chain of transactions, akin to a linked list.
+- **Transaction Linking**: Uses `nowDbTx` and `recentDataListTx` to create a chain of transactions, akin to a linked list.
 
 ## Advantages on Ethereum
 
