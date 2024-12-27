@@ -1,4 +1,7 @@
 //SPDX-License-Identifier: Apache License 2.0 
+// Solidity로 변경한 예시 (이더리움 스마트 계약)
+
+
 pragma solidity ^0.8.0;
 
 contract CodeIn {
@@ -11,7 +14,7 @@ contract CodeIn {
         uint8 decodeBreak
     );
 
-    // data update
+         // data update
     event DBCodeSent(
         address indexed user,
         string handle,
@@ -23,18 +26,20 @@ contract CodeIn {
     // data update
     struct UserDataList {
         string nowDbTx;
-        string beforeDbTx;
+        string beforeDataListTx;
     }
+
 
     mapping(address => UserDataList) public userDataLists;
 
     // user_initialize 
     function userInitialize(address user) public {
         UserDataList storage userDataList = userDataLists[user];
-        userDataList.nowDbTx = "Genesis";
-        userDataList.beforeDbTx = "null";
+        userDataList.nowDbTx = "";
+        userDataList.beforeDataListTx = "Genesis";
     }
-    // sendCode function uses log 
+
+    // send_code function uses log 
     function sendCode(
         address user,
         string memory code,
@@ -45,7 +50,7 @@ contract CodeIn {
         emit CodeSent(user, code, beforeTx, method, decodeBreak);
     }
 
-    // sendDbCode function uses log 
+    // db_code_in function uses state update 
     function sendDbCode(
         address user,
         string memory handle,
@@ -56,13 +61,14 @@ contract CodeIn {
         emit DBCodeSent(user, handle, tailTx, typeField, offset);
     
     }
-     // userDataConnect function uses state update 
+
     function userDataConnect(
         address user,
-        string memory newDbTx
+        string memory newDbTx,
+        string memory recentDataListTx
     ) public {
         UserDataList storage userDataList = userDataLists[user];
-        userDataList.beforeDbTx = userDataList.nowDbTx; 
         userDataList.nowDbTx = newDbTx;
+        userDataList.beforeDataListTx = recentDataListTx;
     }
 }
