@@ -1,69 +1,83 @@
-//SPDX-License-Identifier: Apache License 2.0 
+//SPDX-License-Identifier: Apache License 2.0
 pragma solidity ^0.8.0;
 
 contract CodeIn {
-    // event log
-    event CodeSent(
-        address indexed user,
-        string code,
-        string beforeTx,
-        uint8 method,
-        uint8 decodeBreak
-    );
+    struct CodeInfo {
+        address user;
+        string code;
+        string beforeTx;
+        uint8 method;
+        uint8 decodeBreak;
+    }
 
-         // data update
-    event DBCodeSent(
-        address indexed user,
-        string handle,
-        string tailTx,
-        string typeField,
-        string offset
-    );
-      
+    struct DbCodeInfo {
+        address user;
+        string handle;
+        string tailTx;
+        string typeField;
+        string offset;
+    }
+
+    // event log
+    event CodeSent(bytes indexed codeInfo);
+
+    // data update
+    event DBCodeSent(bytes indexed dbCodeInfo);
+
     // data update
     struct UserDataList {
         string nowDbTx;
         string beforeDataListTx;
     }
 
-
     mapping(address => UserDataList) public userDataLists;
 
-    // user_initialize 
+    // user_initialize
     function userInitialize(address user) public {
         UserDataList storage userDataList = userDataLists[user];
         userDataList.nowDbTx = "";
         userDataList.beforeDataListTx = "Genesis";
     }
 
-    // send_code function uses log 
-    function sendCode(
-        address user,
-        string memory code,
-        string memory beforeTx,
-        uint8 method,
-        uint8 decodeBreak
-    ) public {
-        emit CodeSent(user, code, beforeTx, method, decodeBreak);
+    function encodeCodeInfo(CodeInfo memory codeInfo) public pure returns (bytes memory) {
+        return abi.encode(codeInfo);
     }
 
-    // db_code_in function uses state update 
+    function decodeCodeInfo(bytes memory codeInfoBytes) public pure returns (CodeInfo memory) {
+        return abi.decode(codeInfoBytes, (CodeInfo));
+    }
+
+    function encodeDbCodeInfo(DbCodeInfo memory dbCodeInfo) public pure returns (bytes memory) {
+        return abi.encode(dbCodeInfo);
+    }
+
+    function decodeDbCodeInfo(bytes memory dbCodeInfoBytes) public pure returns (DbCodeInfo memory) {
+        return abi.decode(dbCodeInfoBytes, (DbCodeInfo));
+    }
+
+    // send_code function uses log
+    function sendCode(address user, string calldata code, string calldata beforeTx, uint8 method, uint8 decodeBreak)
+        public
+    {
+        CodeInfo memory codeInfo = CodeInfo(user, code, beforeTx, method, decodeBreak);
+        bytes memory codeInfoBytes = encodeCodeInfo(codeInfo);
+        emit CodeSent(codeInfoBytes);
+    }
+
+    // db_code_in function uses state update
     function sendDbCode(
         address user,
-        string memory handle,
-        string memory tailTx,
-        string memory typeField,
-        string memory offset
+        string calldata handle,
+        string calldata tailTx,
+        string calldata typeField,
+        string calldata offset
     ) public {
-        emit DBCodeSent(user, handle, tailTx, typeField, offset);
-    
+        DbCodeInfo memory dbCodeInfo = DbCodeInfo(user, handle, tailTx, typeField, offset);
+        bytes memory dbCodeInfoBytes = encodeDbCodeInfo(dbCodeInfo);
+        emit DBCodeSent(dbCodeInfoBytes);
     }
 
-    function userDataConnect(
-        address user,
-        string memory newDbTx,
-        string memory recentDataListTx
-    ) public {
+    function userDataConnect(address user, string calldata newDbTx, string calldata recentDataListTx) public {
         UserDataList storage userDataList = userDataLists[user];
         userDataList.nowDbTx = newDbTx;
         userDataList.beforeDataListTx = recentDataListTx;
